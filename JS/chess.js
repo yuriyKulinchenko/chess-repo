@@ -7,7 +7,7 @@ function isBlack(piece) {
 
 const blackPawnId = 7;
 function isWhite(piece) {
-    if (piece > 0 && piece < blackPawnIds) { return true }
+    if (piece > 0 && piece < blackPawnId) { return true }
     return false;
 }
 
