@@ -868,4 +868,4 @@ class Chess {
             return true;
         }
     }
-}
+}   
