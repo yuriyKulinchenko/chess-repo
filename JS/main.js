@@ -1,5 +1,4 @@
 //init start
-
 let boardClass = document.querySelector('.board');
 var currentChild;
 for (let i = 0; i < 64; i++) {
@@ -54,22 +53,32 @@ let renderBoard = function (game) {
     }
 }
 
-const From = document.querySelector('.From');
-const To = document.querySelector('.To');
-const MakeMove = document.querySelector('#moveButton');
-const UndoMove = document.querySelector('#undoButton');
-const Turn = document.querySelector('.turn');
+let gameState = false;
+let from; let to;
 
-MakeMove.addEventListener('click', e => {
-    let move = game.generateManualMove(Number(From.value), Number(To.value));
-    From.value = '';
-    To.value = '';
-    if (move != false) {
-        if (Turn.innerHTML == 'white') {
-            Turn.innerHTML = 'black';
+for (let i = 0; i < boardGUI.length; i++) {
+    boardGUI[i].addEventListener('click', e => {
+        let val = Array.from(boardGUI[i].childNodes)
+        val = val[0].innerHTML;
+        if (gameState) {
+            to = val;
+            boardGUI[gridToDisplay[from]].style.zIndex = 0;
+            boardGUI[gridToDisplay[from]].style.outline = 'solid green 0px';
+            makeMove(from, to);
         } else {
-            Turn.innerHTML = 'white';
+            from = val;
+            boardGUI[i].style.outline = 'solid green 3px';
+            boardGUI[i].style.zIndex = 5;
         }
+        gameState = !gameState;
+    })
+}
+
+let makeMove = function (from, to) {
+    let move = game.generateManualMove(Number(from), Number(to));
+    if (move == false) {
+        return;
+    } else {
         game.makeMove(move);
         renderBoard(game);
         setTimeout(() => {
@@ -77,23 +86,8 @@ MakeMove.addEventListener('click', e => {
             game.makeMove(nextMove);
             renderBoard(game);
         }, 500);
-    } else {
-        console.log('invalid move');
     }
-});
-
-UndoMove.addEventListener('click', e => {
-    if (game.undoMove() == false) {
-        console.log('invalid move');
-        return;
-    }
-    if (Turn.innerHTML == 'white') {
-        Turn.innerHTML = 'black';
-    } else {
-        Turn.innerHTML = 'white';
-    }
-    renderBoard(game);
-});
+}
 
 
 const game = new Chess();
