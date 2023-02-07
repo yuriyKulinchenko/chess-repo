@@ -1,12 +1,11 @@
 class ChessEngine {
     constructor(game) {
         this.game = game;
-        this.evaluationDepth = 5;
+        this.evaluationDepth = 4;
     }
     bestMove() {//return the next best move
         let moves = this.game.generateAllMoves();
         moves = this.orderMoves(moves);
-        console.log(moves);
         if (moves.length == 0) {//no move can be generated from this position
             if (this.game.inCheck(true)) {
                 console.log('white loses');
@@ -48,12 +47,13 @@ class ChessEngine {
     minMaxEvaluation(depth, max, alpha, beta) {//returns a more advanced evaluation using the minimax algorithm
         let moves;
         let current;
+
         if (depth == 0) {
             return this.staticEvaluation();
         }
         moves = this.game.generateAllMoves();
         moves = this.orderMoves(moves);
-        console.log(moves);
+
         if (moves.length == 0) {//there are no moves that can be made from the position
             if (this.game.turn == true) {//it is whites turn
                 if (this.game.inCheck(true)) {
@@ -122,6 +122,12 @@ class ChessEngine {
         returns an array that contains only capture moves
         a capture move can easily be verified if move.capturedPiece != PIECE.empty
         */
+        return moves.filter((move) => {
+            if (move.capturedPiece != PIECE.EMPTY) {
+                return true;
+            }
+            return false;
+        })
     }
 
     staticEvaluation() {
@@ -129,6 +135,10 @@ class ChessEngine {
     }
 
     simpleStaticEvaluation() {//return a simple static evaluation: numerical value
+        return this.pieceValueEvaluation();
+    }
+
+    pieceValueEvaluation() {
         let blackPieceSum = 0;
         let whitePieceSum = 0;
 
