@@ -1,10 +1,12 @@
 class ChessEngine {
     constructor(game) {
         this.game = game;
-        this.evaluationDepth = 4;
+        this.evaluationDepth = 5;
     }
     bestMove() {//return the next best move
         let moves = this.game.generateAllMoves();
+        moves = this.orderMoves(moves);
+        console.log(moves);
         if (moves.length == 0) {//no move can be generated from this position
             if (this.game.inCheck(true)) {
                 console.log('white loses');
@@ -50,6 +52,8 @@ class ChessEngine {
             return this.staticEvaluation();
         }
         moves = this.game.generateAllMoves();
+        moves = this.orderMoves(moves);
+        console.log(moves);
         if (moves.length == 0) {//there are no moves that can be made from the position
             if (this.game.turn == true) {//it is whites turn
                 if (this.game.inCheck(true)) {
@@ -89,6 +93,35 @@ class ChessEngine {
             }
             return lowest;
         }
+    }
+
+    orderMoves(moves) {
+        /*
+        takes an array 'moves'
+        returns the moves ordered from best to worst
+        the best moves are moves where a low value piece captures a high value piece
+        the value of a move is val of piece captured - val of piece moving
+        */
+        return moves.sort((a, b) => {
+            let movingPieceA = this.game.board[a.source];
+            let capturedPieceA = this.game.board[a.capturedPiece];
+
+            let movingPieceB = this.game.board[b.source];
+            let capturedPieceB = this.game.board[b.capturedPiece];
+
+            let aValue = numToValue[capturedPieceA] - numToValue[movingPieceA];
+            let bValue = numToValue[capturedPieceB] - numToValue[movingPieceB];
+
+            return aValue - bValue;
+        });
+    }
+
+    onlyCaptures(moves) {
+        /*
+        takes an array 'moves'
+        returns an array that contains only capture moves
+        a capture move can easily be verified if move.capturedPiece != PIECE.empty
+        */
     }
 
     staticEvaluation() {

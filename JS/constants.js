@@ -26,6 +26,8 @@ const OFFSET = {
     whitePawnOffset: [-9, -11]
 };
 
+//------------------------------ENGINE CONSTANTS------------------------------
+
 const VALUE = {
     pawn: 100,
     knight: 300,
@@ -33,6 +35,22 @@ const VALUE = {
     rook: 500,
     queen: 900
 }
+
+const numToValue = new Array(13);
+
+numToValue[0] = 0;
+numToValue[1] = VALUE.pawn;
+numToValue[2] = VALUE.knight;
+numToValue[3] = VALUE.bishop;
+numToValue[4] = VALUE.rook;
+numToValue[5] = VALUE.queen;
+numToValue[6] = VALUE.pawn; //kings moves should be considered first 
+numToValue[7] = VALUE.pawn;
+numToValue[8] = VALUE.knight;
+numToValue[9] = VALUE.bishop;
+numToValue[10] = VALUE.rook;
+numToValue[11] = VALUE.queen;
+numToValue[12] = VALUE.pawn; //kings moves should be considered first 
 
 
 
