@@ -194,6 +194,14 @@ class Chess {
         }
     }
 
+    makeMoveOnlyBoard(move) {
+
+    }
+
+    undoMoveOnlyBoard(move) {
+
+    }
+
     undoMove() {
         if (this.history.length == 0) {
             return false;
@@ -750,6 +758,9 @@ class Chess {
         }
         return legalMoves;
     }
+
+    //it is inefficient to make a move to validate it
+
 
     isValidMove(move) {
         this.makeMove(move);
