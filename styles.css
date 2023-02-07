@@ -27,7 +27,7 @@ body {
     position: relative;
     color: black;
     font-size: 300;
-    display: none;
+    transform: rotateX(180deg);
 }
 
 img {

@@ -109,6 +109,10 @@ class Chess {
         let index;
         this['board'][source] = PIECE.EMPTY;
         this['board'][destination] = movingPiece;
+        if (movingPiece == 0) {
+            console.log(`trying to move non-existent piece ${source} ${destination}`);
+            console.log(this);
+        }
         index = this['piece'][movingPiece].indexOf(source);
         if (index == -1) {
             console.log('error: trying to access piece that doesnt exist');
@@ -139,6 +143,20 @@ class Chess {
         this['board'][destination] = PIECE.EMPTY;
         let index = this['piece'][pieceType].indexOf(destination);
         this['piece'][pieceType].splice(index, 1);
+    }
+
+    movePieceOnlyBoard(source, destination) {
+        let pieceType = this['board'][source];
+        this['board'][source] = PIECE.EMPTY;
+        this['board'][destination] = pieceType;
+    }
+
+    placePieceOnlyBoard(destination, pieceType) {
+        this['board'][destination] = pieceType;
+    }
+
+    removePieceOnlyBoard(destination) {
+        this['board'][destination] = PIECE.EMPTY;
     }
 
     makeMove(move) {
@@ -194,14 +212,6 @@ class Chess {
         }
     }
 
-    makeMoveOnlyBoard(move) {
-
-    }
-
-    undoMoveOnlyBoard(move) {
-
-    }
-
     undoMove() {
         if (this.history.length == 0) {
             return false;
@@ -248,6 +258,88 @@ class Chess {
             }
             if (capturedPiece != PIECE.EMPTY) {
                 this.placePiece(destination, capturedPiece);
+            }
+        }
+    }
+
+    makeMoveOnlyBoard(move) {
+        //if the king moves, the pos should be updated
+        this.turn = !this.turn;
+
+        let source = move.source;
+        let destination = move.destination;
+        let moveType = move.moveType;
+        let movingPiece = this['board'][source];
+        this.movePieceOnlyBoard(source, destination);
+
+        if (movingPiece == PIECE.wK || movingPiece == PIECE.bK) {
+            this['piece'][movingPiece][0] = destination;
+        }
+
+        if (moveType == 2) {//castle
+            if (destination == 27) {
+                this.movePieceOnlyBoard(28, 26);
+            } else if (destination == 23) {
+                this.movePieceOnlyBoard(21, 24);
+            } else if (destination == 97) {
+                this.movePieceOnlyBoard(98, 96);
+            } else if (destination == 93) {
+                this.movePieceOnlyBoard(91, 94);
+            }
+        } else if (moveType == 3) {//en passant
+            this.removePieceOnlyBoard(destination);
+        } else if (moveType == 5) {//promotion
+            this.removePieceOnlyBoard(destination);
+            if (movingPiece == PIECE.wP) {
+                this.placePieceOnlyBoard(destination, PIECE.wQ);
+            } else {
+                this.placePieceOnlyBoard(destination, PIECE.bQ);
+            }
+        }
+    }
+
+    undoMoveOnlyBoard(move) {
+        this.turn = !this.turn;
+        let source = move.source;
+        let destination = move.destination;
+        let moveType = move.moveType;
+        let capturedPiece = move.capturedPiece;
+        let movingPiece = this['board'][destination];
+
+        if (movingPiece == PIECE.wK || movingPiece == PIECE.bK) {
+            this['piece'][movingPiece][0] = source;
+        }
+
+        this.movePieceOnlyBoard(destination, source);
+
+        if (moveType == 1) {//capture
+            this.placePieceOnlyBoard(destination, capturedPiece);
+        } else if (moveType == 2) {//castle
+            if (destination == 27) {
+                this.movePieceOnlyBoard(26, 28);
+            } else if (destination == 23) {
+                this.movePieceOnlyBoard(24, 21);
+            } else if (destination == 97) {
+                this.movePieceOnlyBoard(96, 98);
+            } else if (destination == 93) {
+                this.movePieceOnlyBoard(94, 91);
+            }
+        } else if (moveType == 3) {//en passant
+            if (this.turn) {
+                this.placePieceOnlyBoard(this.enPassant, PIECE.bP);
+            } else {
+                this.placePieceOnlyBoard(this.enPassant, PIECE.wP);
+            }
+        } else if (moveType == 5) {//promotion
+            if (this['board'][source] == PIECE.wQ) {
+                this.removePieceOnlyBoard(source);
+                this.placePieceOnlyBoard(source, PIECE.wP);
+            } else {
+                this.removePieceOnlyBoard(source);
+                this.placePieceOnlyBoard(source, PIECE.bP);
+            }
+            if (capturedPiece != PIECE.EMPTY) {
+                this.placePieceOnlyBoard(destination, capturedPiece);
             }
         }
     }
