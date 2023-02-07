@@ -270,6 +270,7 @@ class Chess {
         let destination = move.destination;
         let moveType = move.moveType;
         let movingPiece = this['board'][source];
+
         this.movePieceOnlyBoard(source, destination);
 
         if (movingPiece == PIECE.wK || movingPiece == PIECE.bK) {
@@ -287,7 +288,7 @@ class Chess {
                 this.movePieceOnlyBoard(91, 94);
             }
         } else if (moveType == 3) {//en passant
-            this.removePieceOnlyBoard(destination);
+            this.removePieceOnlyBoard(move.enPassant);
         } else if (moveType == 5) {//promotion
             this.removePieceOnlyBoard(destination);
             if (movingPiece == PIECE.wP) {
@@ -855,9 +856,9 @@ class Chess {
 
 
     isValidMove(move) {
-        this.makeMove(move);
+        this.makeMoveOnlyBoard(move);
         let output = this.validateBoard();
-        this.undoMove();
+        this.undoMoveOnlyBoard(move);
         return output;
     }
 

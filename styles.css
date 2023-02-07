@@ -28,6 +28,7 @@ body {
     color: black;
     font-size: 300;
     transform: rotateX(180deg);
+    display: none;
 }
 
 img {
