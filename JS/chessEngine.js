@@ -15,7 +15,7 @@ class ChessEngine {
             console.log('stalemate');
             return;
         }
-        let bestMove;
+        let bestMove = false;
         let bestValue;
         let current;
         if (this.game.turn) {//white is moving
@@ -40,6 +40,9 @@ class ChessEngine {
                     bestMove = moves[i];
                 }
             }
+        }
+        if (bestMove == false) {
+            console.log('game over, no possible moves');
         }
         return bestMove;
     }
@@ -130,8 +133,43 @@ class ChessEngine {
         })
     }
 
-    staticEvaluation() {
+    staticEvaluation(alpha = -Infinity, beta = +Infinity) {
         return this.simpleStaticEvaluation();
+        // let current;
+
+        // let moves = this.game.generateAllMoves();
+        // moves = this.onlyCaptures(moves);
+
+        // if (moves.length == 0) {
+        //     return this.simpleStaticEvaluation();
+        // }
+        // if (this.turn) {//find the max
+        //     let highest = -Infinity;
+        //     for (let i = 0; i < moves.length; i++) {
+        //         this.game.makeMove(moves[i]);
+        //         current = this.staticEvaluation(alpha, beta);
+        //         this.game.undoMove();
+        //         highest = Math.max(current, highest);
+        //         alpha = Math.max(current, alpha);
+        //         if (beta <= alpha) {
+        //             break;
+        //         }
+        //     }
+        //     return highest;
+        // } else if (!this.turn) {//find the min
+        //     let lowest = Infinity;
+        //     for (let i = 0; i < moves.length; i++) {
+        //         this.game.makeMove(moves[i]);
+        //         current = this.staticEvaluation(alpha, beta);
+        //         this.game.undoMove();
+        //         lowest = Math.min(current, lowest);
+        //         beta = Math.min(current, beta);
+        //         if (beta <= alpha) {
+        //             break;
+        //         }
+        //     }
+        //     return lowest;
+        // }
     }
 
     simpleStaticEvaluation() {//return a simple static evaluation: numerical value
